@@ -80,7 +80,7 @@ renderer = (item)->
       </div>
       <div class='row log #{item.type}'>
         <div class='col-md-12'>
-          <pre>#{item.content.replace(/\[\d*m/g,'')}</pre>
+          <pre><b class='text-primary'>[#{item.appCode}]</b>#{item.content.replace(/\[\d*m/g,'')}</pre>
         </div>
       </div>
     </div>"
