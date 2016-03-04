@@ -1,0 +1,11 @@
+/node_modules/*
+/test/src/**
+/build/release/**
+npm-debug.log
+*.bak
+*.rdb
+*.orig
+*_BACKUP_*
+*_LOCAL_*
+*_REMOTE_*
+*_BASE_*

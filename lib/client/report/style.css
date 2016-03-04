@@ -1,0 +1,38 @@
+#statusFlag,
+#statusLog{
+  font-size: 25px;
+}
+#logContainer{
+  font-size: 14px;
+}
+.log pre{
+  padding: 15px;
+  color: white;
+  background-color: #333;
+}
+.operate-container .row{
+  margin: 20px 0;
+}
+#appCodeValue{
+  margin: 0 10px;
+}
+#logContainer{
+  height: 500px;
+  overflow: auto;
+}
+.log-table .header{
+  font-size: 20px;
+  font-weight: 700;
+}
+.log-table .item{
+  padding: 1px;
+}
+.log.error pre{
+  color: red;
+}
+.log.warning pre{
+  color: yellow;
+}
+.log.success pre{
+  color: green;
+}
