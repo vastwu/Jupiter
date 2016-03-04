@@ -2,7 +2,8 @@ fs = require 'fs'
 http = require 'http'
 redis = require 'redis'
 Path = require 'path'
-LogExportor = require './LogExportor'
+LogExportor = require './LogExportor2'
+Transform = require('stream').Transform
 
 SOCKET_PORT = 3000
 logExportors = {}
@@ -127,32 +128,20 @@ module.exports = (req, res) ->
 
       manageInstance.boardcast 'log', args
 
-      return
       # 先不做存储 
+      appCode = args.appCode
       if not appCode
         throw new Error 'missing app code'
-      delete query.code
 
       exportor = logExportors[appCode]
       if not exportor
         exportor = logExportors[appCode] = new LogExportor appCode
         exportor.autoFlush yes
 
-      today = new Date()
-      log =
-        query: query
-        unique: query.unique or undefined
-        ua: ua
-        cookie: req.headers.cookie
-        host: host
-        date: today.getTime()
+      exportor.push args
 
-      unique = query.unique
-      delete query.unique
-      exportor.push log, unique
-      log._waiting = exportor.length
-      res.json log
     when '/index'
+
       # 首页
       filePath = "lib/client/report/index.html"
       html = fs.readFileSync filePath, 'utf-8'
