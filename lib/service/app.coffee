@@ -28,9 +28,6 @@ jsonOutput = (data) ->
   @end str
 
 app.use (req, res, next)->
-  console.log '------------'
-  console.log req.body
-  console.log '------------'
   url = URL.parse req.url, true
   req.url = url
   next()
