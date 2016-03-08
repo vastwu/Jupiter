@@ -14,6 +14,7 @@
     "express": "^4.13.4",
     "gulp": "^3.9.0",
     "gulp-rsync": "0.0.5",
+    "mysql": "^2.10.2",
     "redis": "^2.4.2",
     "socket.io": "^1.4.5",
     "uglify-js": "^2.6.1"

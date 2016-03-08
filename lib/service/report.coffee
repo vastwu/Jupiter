@@ -1,9 +1,11 @@
 fs = require 'fs'
 redis = require 'redis'
 Path = require 'path'
-LogExportor = require './LogExportor2'
+#LogExportor = require './LogExportor2'
 SocketManager = require './SocketManager'
 Transform = require('stream').Transform
+
+LogExportor = require './exports/Mysql'
 
 SOCKET_PORT = 3000
 logExportors = {}
