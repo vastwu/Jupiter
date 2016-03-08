@@ -9,6 +9,7 @@ SOCKET_PORT = 3000
 logExportors = {}
 
 DEFAULT_CONFIG =
+  connection: no
   receiving: yes
   appCode: '*'
   filter: ''
@@ -107,8 +108,6 @@ module.exports = (req, res) ->
           status: 500
           reason: "socket is listening #{SOCKET_PORT}"
           socketPort: SOCKET_PORT
-      
-      return
     when '/stop'
       # 停止接收
       manageInstance.close()
@@ -120,6 +119,10 @@ module.exports = (req, res) ->
       if not manageInstance
         return
       args = copy req.url.query
+
+      if args.content
+        # content中可能携带类似 [33m一类的颜色字符
+        args.content = args.content.replace(/\[\d*m/g,'')
 
       args.ua = req.headers['user-agent'] or ''
       args.host = req.headers['host'] or ''

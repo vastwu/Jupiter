@@ -1,5 +1,6 @@
 /node_modules/*
 /test/src/**
+/logs
 /build/release/**
 npm-debug.log
 *.bak

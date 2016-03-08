@@ -22,12 +22,36 @@ loadScript = (src, args = [])->
       resolve args
     document.body.appendChild s
 
+# render status
+statusChange = (config)->
+  TRUE_ICON = "<i class='glyphicon glyphicon-ok-sign text-success'></i>"
+  FALSE_ICON = "<i class='glyphicon glyphicon-remove-sign text-danger'></i>"
+  DEFAULT_ICON = "<i class='glyphicon glyphicon-question-sign text-warning'></i>"
+
+  html = []
+  for key, value of config
+    switch value
+      when yes
+        value = TRUE_ICON
+      when no
+        value = FALSE_ICON
+
+    html.push "
+      <div class='row'>
+        <label class='col-sm-6'>#{key}：</label> 
+        <div class='col-sm-6'>#{value}</div> 
+      </div> 
+    "
+  $('.status-win').html html.join('')
+
+
 tryConnection = () ->
   HOST_NAME ="http://#{location.hostname}"
   $.get '/status', (result)->
     if result.status is 200 and result.enable is '1'
       src = "#{HOST_NAME}:#{result.socketPort}/socket.io/socket.io.js"
       configJson = result.defaultConfig
+      configJson.connection = yes
       loadScript(src).then ()->
         socket = io "#{HOST_NAME}:#{result.socketPort}",
           reconnection: no
@@ -38,35 +62,31 @@ tryConnection = () ->
               listener.apply(socket, arguments)
 
     else
+      if not configJson
+        configJson = {}
+      configJson.connection = yes
       socketImplement.connect_error.apply null, []
 
-
-$("#startSocket").click ()->
-  startService tryConnection
-
-$("#stopSocket").click ()->
-  closeService()
+$('#toggleSocket').click ()->
+  if configJson.connection
+    closeService()
+  else
+    startService tryConnection
 
 $('#toggleReceiving').change ()->
   configJson.receiving = this.checked
-  if configJson.receiving
-    $('#statusLog').attr 'class', 'glyphicon glyphicon-ok-sign text-success'
-  else
-    $('#statusLog').attr 'class', 'glyphicon glyphicon-remove-sign text-danger'
-  socket.emit 'config', configJson
+  socketImplement.setConfig configJson
 
 $('#saveAppcodeFilter').click ()->
-  appCode = $(this).prev().val()
-  configJson.appCode = appCode
-  socket.emit 'config', configJson
-  $('#appCodeValue').html appCode
+  value = $(this).parents('.form-group').find('input').val()
+  configJson.appCode = value
+  socketImplement.setConfig configJson
 
 
 $('#saveContentFilter').click ()->
-  filter = $(this).prev().val()
-  configJson.filter = filter
-  socket.emit 'config', configJson
-  $('#contentFilterValue').html filter
+  value = $(this).parents('.form-group').find('input').val()
+  configJson.filter = value
+  socketImplement.setConfig configJson
 
 
 renderer = (item)->
@@ -80,23 +100,29 @@ renderer = (item)->
       </div>
       <div class='row log #{item.type}'>
         <div class='col-md-12'>
-          <pre><b class='text-primary'>[#{item.appCode}]</b>#{item.content.replace(/\[\d*m/g,'')}</pre>
+          <pre><b class='text-primary'>[#{item.appCode}]</b>#{item.content}</pre>
         </div>
       </div>
     </div>"
   return row
 
 socketImplement =
+  setConfig: (json)->
+    socket.emit 'config', json
+    statusChange json
+
   connect: ()->
     console.log 'connect'
     $('#statusFlag').attr 'class', 'glyphicon glyphicon-ok-sign text-success'
-    socket.emit 'config', configJson
+    configJson.connection = yes
+    socketImplement.setConfig configJson
 
   error: (message)->
     alert message
 
   event: (data)->
     console.log data
+
   log: (item)->
     row = renderer item
     $tb = $('#logTableBody')
@@ -106,16 +132,19 @@ socketImplement =
     else
       $tb.append row
 
-  disConnect: ()->
-    $('#statusFlag').attr 'class', 'glyphicon glyphicon-remove-sign text-danger'
+  disconnect: ()->
+    configJson.connection = no
+    statusChange configJson
 
   connect_error: ()->
     console.log 'error'
-    $('#statusFlag').attr 'class', 'glyphicon glyphicon-remove-sign text-danger'
+    configJson.connection = no
+    statusChange configJson
 
   reconnect_error: ()->
     console.log 'error'
-    $('#statusFlag').attr 'class', 'glyphicon glyphicon-remove-sign text-danger'
+    configJson.connection = no
+    statusChange configJson
     # 尝试重启
     #$.get '/start'
 

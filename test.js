@@ -22,6 +22,11 @@ MyTransform.prototype._write = function (data, encoding, done) {
   done()
 }
 
+MyTransform.prototype._read = function (size) {
+  console.log('~~read', size)
+  this.push(123)
+  this.push(0)
+}
 /*
 var s = new Transform({
   nouse_transform: function (data, encoding, done) {
@@ -72,6 +77,6 @@ s.on('readable', function () {
 */
 
 setInterval(function () {
-  var one = s.read(1)
+  var one = s.read(2)
   console.log('----------read out:', one)
 }, 2000)

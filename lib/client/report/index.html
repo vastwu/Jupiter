@@ -8,44 +8,68 @@
 </head>
 <body>
   <div class="container-fluid">
-    <div class="operate-container form-horizontal">
-      <div class="row">
-        <label class="control-label col-md-2">
-          <span>当前Service状态：</span>
-          <i id="statusFlag" class="glyphicon glyphicon-question-sign text-warning"></i>
-        </label>
-        <div class="col-md-3">
-          <button id="startSocket" type="button" class="btn btn-primary">启动service</button>
-          <button id="stopSocket" type="button" class="btn btn-danger">停止service</button>
-        </div>
-        <label class="control-label col-md-2">
-          <span>当前Client状态：</span>
-          <i id="statusLog" class="glyphicon glyphicon-ok-sign text-success"></i>
-        </label>
-        <div class="col-md-3 checkbox">
-          <label>
-            <input id="toggleReceiving" type="checkbox" checked>
-            切换状态
+    <div class="operate-container row">
+      <div class="status-win"></div>
+      <div class="col-md-6 form-horizontal">
+        <div class="form-group">
+          <label for="statusFlag" class="col-sm-4 control-label">
+            切换Service状态：
           </label>
+          <div class="col-sm-8">
+            <button id="toggleSocket" type="button" class="btn btn-warning">Toggle</button>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <label class="control-label col-md-2">AppCode过滤：<b id="appCodeValue">*</b></label>
-        <div class="col-md-3 form-inline">
-          <div class="">
+        <div class="form-group">
+          <label class="control-label col-md-4">
+            AppCode过滤：
+          </label>
+          <div class="col-sm-6">
             <input type="text" value="*" class="form-control" />
+          </div>
+          <div class="col-sm-2">
             <button id="saveAppcodeFilter" type="button" class="btn btn-warning">保存</button>
           </div>
         </div>
-        <label class="control-label col-md-2">Content Filter：<b id="contentFilterValue"></b></label>
-        <div class="col-md-3 form-inline">
-          <div class="">
+        <div class="form-group">
+          <label class="control-label col-md-4">
+            Content Filter：
+          </label>
+          <div class="col-sm-6">
             <input type="text" value="" class="form-control" />
+          </div>
+          <div class="col-sm-2">
             <button id="saveContentFilter" type="button" class="btn btn-warning">保存</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-4 col-sm-10">
+            <div class="checkbox">
+              <label>
+                <input id="toggleReceiving" type="checkbox" checked> 切换client接收状态
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 form-horizontal">
+        <div class="form-group">
+          <label for="statusFlag" class="col-sm-4 control-label">
+            <i style="display:none;" id="statusLog" class="glyphicon glyphicon-ok-sign text-success"></i>
+          </label>
+          <div class="col-md-8 checkbox">
+            <label>
+            </label>
           </div>
         </div>
       </div>
     </div>
+
+    <b id="contentFilterValue"></b>
+
     <div id="logContainer">
       <div id="logTable" class="table log-table">
         <div class="header">

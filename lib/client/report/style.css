@@ -10,8 +10,24 @@
   color: white;
   background-color: #333;
 }
-.operate-container .row{
-  margin: 20px 0;
+.operate-container {
+  margin-top: 20px;
+  position: relative;
+}
+.operate-container .status-win{
+  position: absolute;
+  right: 20px;
+  top: 0px;
+  border: 1px solid green;
+  border-radius: 4px;
+  min-width: 200px;
+  text-align: center;
+}
+.operate-container .status-win .row{
+  margin: 6px 10px;
+}
+.status-win .row label{
+  text-align: left;
 }
 #appCodeValue{
   margin: 0 10px;
