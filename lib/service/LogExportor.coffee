@@ -12,7 +12,7 @@ copy = (source) ->
     else
       r[k] = v
   return r
-
+  
 parseLog2String = (log) ->
   str = JSON.stringify(log)
   return str
