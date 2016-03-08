@@ -3,6 +3,7 @@ Path = require 'path'
 fs = require 'fs'
 URL = require 'url'
 express = require "express"
+bodyParser = require 'body-parser'
 coffeescript = require 'coffee-script'
 UglifyJS = require 'uglify-js'
 # 子模块
@@ -27,12 +28,20 @@ jsonOutput = (data) ->
   @end str
 
 app.use (req, res, next)->
+  console.log '------------'
+  console.log req.body
+  console.log '------------'
   url = URL.parse req.url, true
   req.url = url
   next()
 
 app.get '/favicon.ico', (req, res, next)->
   res.end('')
+
+app.use bodyParser.urlencoded
+  extended: true
+
+app.use bodyParser.json()
 
 report app
 

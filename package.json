@@ -9,6 +9,7 @@
   "author": "wusen",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "coffee-script": "^1.10.0",
     "express": "^4.13.4",
     "gulp": "^3.9.0",

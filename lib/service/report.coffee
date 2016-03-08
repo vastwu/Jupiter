@@ -30,8 +30,13 @@ client = redis.createClient 6379,'127.0.0.1', {}
 client.on "error",  (err) ->
   console.log "Error " + err
 ###
+getParams = (req, keys)->
+  body = req.body or {}
+  query = req.query or {}
 
-
+  result = for key in keys
+    body[key] or query[key]
+  return result
 
 manageInstance = null
 
@@ -63,16 +68,24 @@ module.exports = (app) ->
     manageInstance = null
     res.end 'ok'
 
-  app.get '/send', (req, res)->
+  sendRouter = (req, res)->
     res.end('')
     if not manageInstance
       return
-    args = copy req.url.query
 
-    if args.content
-      # content中可能携带类似 [33m一类的颜色字符
-      args.content = args.content.replace(/\[\d*m/g,'')
+    args = {}
+    appCode = req.url.query.appCode
+    if not appCode
+      throw new Error 'missing app code'
 
+    [content, type] = getParams req, ['content', 'type']
+  
+    content = decodeURIComponent content
+    content = (content or '').replace(/\[\d*m/g,'')
+
+    args.appCode = appCode
+    args.content = content
+    args.type = type
     args.ua = req.headers['user-agent'] or ''
     args.host = req.headers['host'] or ''
     args.cookie = req.headers.cookie or ''
@@ -81,9 +94,6 @@ module.exports = (app) ->
     manageInstance.boardcast 'log', args
 
     # 先不做存储 
-    appCode = args.appCode
-    if not appCode
-      throw new Error 'missing app code'
 
     exportor = logExportors[appCode]
     if not exportor
@@ -91,6 +101,10 @@ module.exports = (app) ->
       exportor.autoFlush yes
 
     exportor.push args
+
+
+  app.get '/send', sendRouter
+  app.post '/send', sendRouter
 
   app.get '/index', (req, res)->
     # 首页
