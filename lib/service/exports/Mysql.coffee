@@ -32,20 +32,26 @@ class MysqlExportor extends Exportor
     if @pause is yes
       return
     @pause = yes
-    sql = "insert into mp_logs (appcode, content, type, date, ua, host) values "
+    tableName = "mp_logs_#{@appCode}"
+    sql = "insert into #{tableName} (appcode, content, type, date, ua, host) values "
     insertString = for item in @pool.splice 0, @ONCE_FLUSH_COUNT
       #parseLog2String item
       "('#{item.appCode}', '#{item.content}', '#{item.type}', '#{item.date}', '#{item.ua}', '#{item.host}')"
     sql = sql + insertString
     self = @
-    @sqlPool.query sql, (err, result, fields) ->
-      console.log err, result
-      length = self.length -= insertString.length
-      self.pause = no
-      if length > 0
-        console.log "last #{length} in queue..."
-      else
-        console.log "queue has clean! #{length}"
+
+    sqlPool = @sqlPool
+    tableCheckerSql = "create table if not exists #{tableName} like mp_logs_debug;"
+    sqlPool.query tableCheckerSql, (err, result, fields) ->
+      sqlPool.query sql, (err, result, fields) ->
+        if err
+          console.log err
+        length = self.length -= insertString.length
+        self.pause = no
+        if length > 0
+          console.log "last #{length} in queue..."
+        else
+          console.log "queue has clean! #{length}"
     return
 
 module.exports = MysqlExportor
