@@ -44,7 +44,7 @@ class LogExportor
     @length++
     if @length > @MAX_LENGTH
       @flush()
-      @autoFlushTimer yes
+      @autoFlush yes
 
   autoFlush: (enable)->
     clearInterval @autoFlushTimer
