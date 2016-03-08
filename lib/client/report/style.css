@@ -18,10 +18,11 @@
   position: absolute;
   right: 20px;
   top: 0px;
-  border: 1px solid green;
   border-radius: 4px;
   min-width: 200px;
   text-align: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
 }
 .operate-container .status-win .row{
   margin: 6px 10px;
