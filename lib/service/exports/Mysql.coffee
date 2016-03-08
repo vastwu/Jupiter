@@ -1,6 +1,7 @@
 fs = require 'fs'
 mysql = require 'mysql'
 Exportor = require './Exportor'
+config = require '../config'
 
 LOG_FILE_PATH = process.cwd() + '/logs'
 
@@ -23,9 +24,7 @@ class MysqlExportor extends Exportor
   constructor: (@appCode)->
     @pause = no
     Exportor.call @, @appCode
-    logSqlOptions =
-      connectionLimit: 10
-    @sqlPool = mysql.createPool logSqlOptions
+    @sqlPool = mysql.createPool config.logSqlOptions
 
   flush: ()->
     if @length is 0
