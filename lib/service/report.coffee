@@ -104,6 +104,12 @@ module.exports = (app) ->
 
     exportor.push args
 
+  # 强制flush接口
+  app.get '/flush', (req, res)->
+    res.end('')
+    for code, exp of logExportors
+      exp.flush()
+
 
   app.get '/send', sendRouter
   app.post '/send', sendRouter

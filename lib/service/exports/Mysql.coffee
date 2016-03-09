@@ -41,7 +41,7 @@ class MysqlExportor extends Exportor
     sql = "insert into #{tableName} (appcode, content, type, date, ua, host) values "
     insertString = for item in @pool.splice 0, @ONCE_FLUSH_COUNT
       #parseLog2String item
-      "('#{item.appCode}', '#{item.content}', '#{item.type}', '#{item.date}', '#{item.ua}', '#{item.host}')"
+      "(\"#{item.appCode}\", \"#{item.content.replace(/'"/g, "'")}\", \"#{item.type}\", \"#{item.date}\", \"#{item.ua}\", \"#{item.host}\")"
     sql = sql + insertString
     sql = mysql.format sql
     self = @
@@ -52,7 +52,7 @@ class MysqlExportor extends Exportor
       sqlPool.query sql, (err, result, fields) ->
         time = new Date().toLocaleString()
         if err
-          console.log "#{time}: #{err}"
+          console.log "#{time}: #{err}\n #{sql}"
         else
           console.log "#{time}: #{result.message}"
         length = self.length -= insertString.length
