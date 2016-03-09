@@ -24,6 +24,11 @@ class MysqlExportor extends Exportor
   constructor: (@appCode)->
     @pause = no
     Exportor.call @, @appCode
+    @MAX_LENGTH = 200
+    @ONCE_FLUSH_COUNT = 100
+    # 10m 一次入数据库
+    @AUTO_FLUSH_TIMER = 1000 * 10 * 60
+    #@AUTO_FLUSH_TIMER = 5000
     @sqlPool = mysql.createPool config.logSqlOptions
 
   flush: ()->
@@ -38,14 +43,18 @@ class MysqlExportor extends Exportor
       #parseLog2String item
       "('#{item.appCode}', '#{item.content}', '#{item.type}', '#{item.date}', '#{item.ua}', '#{item.host}')"
     sql = sql + insertString
+    sql = mysql.format sql
     self = @
 
     sqlPool = @sqlPool
     tableCheckerSql = "create table if not exists #{tableName} like mp_logs_debug;"
     sqlPool.query tableCheckerSql, (err, result, fields) ->
       sqlPool.query sql, (err, result, fields) ->
+        time = new Date().toLocaleString()
         if err
-          console.log err
+          console.log "#{time}: #{err}"
+        else
+          console.log "#{time}: #{result.message}"
         length = self.length -= insertString.length
         self.pause = no
         if length > 0
