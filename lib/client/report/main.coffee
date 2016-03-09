@@ -89,6 +89,16 @@ $('#saveContentFilter').click ()->
   socketImplement.setConfig configJson
 
 
+logCount = 0
+clearLog = ()->
+  $('#logTableBody').html ''
+  logCount = 0
+
+
+$('#clear').click ()->
+  clearLog()
+
+
 renderer = (item)->
   dateString = new Date(item.date).toLocaleString()
   row =
@@ -131,6 +141,10 @@ socketImplement =
       $(firstChild).before row
     else
       $tb.append row
+    logCount++
+    # 自动清理
+    if logCount > 1000
+      clearLog()
 
   disconnect: ()->
     configJson.connection = no
