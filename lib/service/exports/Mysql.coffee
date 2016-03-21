@@ -30,6 +30,7 @@ class MysqlExportor extends Exportor
     @AUTO_FLUSH_TIMER = 1000 * 10 * 60
     #@AUTO_FLUSH_TIMER = 5000
     @sqlPool = mysql.createPool config.logSqlOptions
+    return
 
   flush: ()->
     if @length is 0

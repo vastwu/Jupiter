@@ -19,6 +19,13 @@ getDateString = (date = new Date())->
 
 # 导出日志
 class FileExportor extends Exportor
+  constructor: (@appCode)->
+    Exportor.call @, @appCode
+    @MAX_LENGTH = 800
+    @ONCE_FLUSH_COUNT = 800
+    # 10m 一次导出
+    @AUTO_FLUSH_TIMER = 1000 * 10 * 60
+    return
   # 输出实现，目前为文件系统方式
   flush: ()->
     if @length is 0

@@ -67,7 +67,7 @@ app.use (req, res, next) ->
     fs.createReadStream(filePath).pipe res
 
 
-app.listen(PORT);
+app.listen(PORT)
 
 
 console.log "Server running at http://127.0.0.1:#{PORT}"

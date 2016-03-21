@@ -1,11 +1,11 @@
 fs = require 'fs'
 redis = require 'redis'
 Path = require 'path'
-#LogExportor = require './LogExportor2'
 SocketManager = require './SocketManager'
 Transform = require('stream').Transform
 
-LogExportor = require './exports/Mysql'
+#LogExportor = require './exports/Mysql'
+LogExportor = require './exports/File'
 
 SOCKET_PORT = 3000
 logExportors = {}
@@ -95,8 +95,6 @@ module.exports = (app) ->
 
     manageInstance.boardcast 'log', args
 
-    # 先不做存储 
-
     exportor = logExportors[appCode]
     if not exportor
       exportor = logExportors[appCode] = new LogExportor appCode
@@ -106,6 +104,7 @@ module.exports = (app) ->
 
   # 强制flush接口
   app.get '/flush', (req, res)->
+    console.log 'flush', logExportors
     res.end('')
     for code, exp of logExportors
       exp.flush()
