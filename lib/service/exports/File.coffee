@@ -9,7 +9,7 @@ parseLog2String = (log) ->
   return str
 
 getDateString = (date = new Date())->
-  m = date.getMonth()
+  m = date.getMonth() + 1
   d = date.getDate()
   if m < 10
     m = "0#{m}"
