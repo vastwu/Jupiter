@@ -85,13 +85,15 @@ module.exports = (app) ->
     content = decodeURIComponent content
     content = (content or '').replace(/\[\d*m/g,'')
 
-    args.appCode = appCode
+    #args.appCode = appCode
     args.content = content
     args.type = type
     args.ua = req.headers['user-agent'] or ''
-    args.host = req.headers['host'] or ''
-    args.cookie = req.headers.cookie or ''
-    args.date = Date.now()
+    #args.host = req.headers['host'] or ''
+    args.xRealIP = req.headers['x-real-ip'] or ''
+    args.xForwardedFor = req.headers['x-forwarded-for'] or ''
+    #args.cookie = req.headers.cookie or ''
+    args.date = (new Date()).toString()
 
     manageInstance.boardcast 'log', args
 

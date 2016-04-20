@@ -4,6 +4,8 @@ Exportor = require './Exportor'
 
 LOG_FILE_PATH = process.cwd() + '/logs'
 
+WRITE_STREAM_CACHE = {}
+
 parseLog2String = (log) ->
   str = JSON.stringify(log)
   return str
@@ -42,10 +44,32 @@ class FileExportor extends Exportor
     fileName = "#{LOG_FILE_PATH}/app.#{@appCode}.#{getDateString(today)}"
     insertString = insertString.join('\n') + '\n'
 
+    ###
     writeStream = fs.createWriteStream fileName,
       flags: 'a'
 
     writeStream.write insertString
     writeStream.end()
+    ###
+
+    #fileName = "#{LOG_FILE_PATH}/app.#{@appCode}.#{getDateString(today)}"
+    streamObject = WRITE_STREAM_CACHE[@appCode]
+    if not streamObject
+      # not create
+      streamObject = WRITE_STREAM_CACHE[@appCode] =
+        stream: fs.createWriteStream fileName,
+          flags: 'a'
+        fileName: fileName
+    else if streamObject.fileName isnt fileName
+      # another day, close old, create new
+      streamObject.stream.end()
+      streamObject = WRITE_STREAM_CACHE[@appCode] =
+        stream: fs.createWriteStream fileName,
+          flags: 'a'
+        fileName: fileName
+
+    streamObject.stream.write insertString
+
+
 
 module.exports = FileExportor

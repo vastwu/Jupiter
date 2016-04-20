@@ -37,6 +37,7 @@ app.get '/favicon.ico', (req, res, next)->
 
 app.use bodyParser.urlencoded
   extended: true
+  limit: '10mb'
 
 app.use bodyParser.json()
 
