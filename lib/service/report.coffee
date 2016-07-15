@@ -7,6 +7,8 @@ Transform = require('stream').Transform
 #LogExportor = require './exports/Mysql'
 LogExportor = require './exports/File'
 
+class aBC
+
 SOCKET_PORT = 3000
 logExportors = {}
 
@@ -85,6 +87,7 @@ module.exports = (app) ->
     content = decodeURIComponent content
     content = (content or '').replace(/\[\d*m/g,'')
 
+    debugger
     #args.appCode = appCode
     args.content = content
     args.type = type
